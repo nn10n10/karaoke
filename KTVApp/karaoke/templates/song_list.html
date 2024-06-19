@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>楽曲リスト</title>
+</head>
+<body>
+    <h1>楽曲リスト</h1>
+    <ul>
+        {% for song in songs %}
+            <li>{{ song.title }} - {{ song.artist }}
+                <a href="{% url 'order_song' song.id %}">点歌</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
