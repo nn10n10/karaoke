@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>搜索歌曲</title>
+</head>
+<body>
+    <h1>搜索歌曲</h1>
+    <form method="GET" action="{% url 'search_songs' %}">
+        <input type="text" name="q" placeholder="输入歌曲名、歌手、专辑或类型" value="{{ query }}">
+        <button type="submit">搜索</button>
+    </form>
+</body>
+</html>

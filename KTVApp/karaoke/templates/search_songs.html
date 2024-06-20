@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>搜索结果</title>
+</head>
+<body>
+    <h1>搜索结果</h1>
+    {% include 'search_form.html' %}
+    <ul>
+        {% for song in songs %}
+            <li>{{ song.title }} - {{ song.artist }}
+                <a href="{% url 'order_song' song.id %}">点歌</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% if not songs %}
+        <p>没有找到匹配的歌曲。</p>
+    {% endif %}
+</body>
+</html>
