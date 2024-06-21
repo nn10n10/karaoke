@@ -7,6 +7,11 @@ from .models.playlist import Playlist
 from .models.history import History
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
+from .forms import SongForm
+from django.contrib.auth.decorators import user_passes_test
+
+def admin_required(user):
+    return user.is_staff
 
 def search_songs(request):
     query = request.GET.get('q')
@@ -57,3 +62,15 @@ def order_song(request, song_id):
 def order_list(request):
     playlists = Playlist.objects.filter(userid=request.user)
     return render(request, 'order_list.html', {'playlists':playlists})
+
+@login_required
+@user_passes_test(admin_required)
+def upload_song(request):
+    if request.method == 'POST':
+        form = SongForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('song_list')
+    else:
+        form = SongForm()
+    return render(request, 'upload_song.html', {'form': form})

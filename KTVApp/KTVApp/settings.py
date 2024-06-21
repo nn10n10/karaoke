@@ -1,3 +1,4 @@
+import os
 """
 Django settings for KTVApp project.
 
@@ -130,3 +131,5 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'karaoke',  
 ]
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
