@@ -6,14 +6,44 @@
 <body>
     <h1>搜索结果</h1>
     {% include 'search_form.html' %}
-    <ul>
-        {% for song in songs %}
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if songs %}
+        <ul>
+            {% for song in songs %}
             <li>{{ song.title }} - {{ song.artist }}
-                <a href="{% url 'order_song' song.id %}">点歌</a>
+                <a href="{% url 'song_detail' song.songid %}">详情</a>
             </li>
         {% endfor %}
-    </ul>
-    {% if not songs %}
+        </ul>
+
+        {% if is_paginated %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if songs.has_previous %}
+                        <a href="?q={{ query }}&page=1">&laquo; 首页</a>
+                        <a href="?q={{ query }}&page={{ songs.previous_page_number }}">上一页</a>
+                    {% endif %}
+
+                    <span class="current">
+                        第 {{ songs.number }} 页，共 {{ songs.paginator.num_pages }} 页
+                    </span>
+
+                    {% if songs.has_next %}
+                        <a href="?q={{ query }}&page={{ songs.next_page_number }}">下一页</a>
+                        <a href="?q={{ query }}&page={{ songs.paginator.num_pages }}">尾页 &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+    {% else %}
         <p>没有找到匹配的歌曲。</p>
     {% endif %}
 </body>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ song.title }} - 详情</title>
+</head>
+<body>
+    <h1>{{ song.title }}</h1>
+    <p>艺术家: {{ song.artist }}</p>
+    <p>专辑: {{ song.album|default:"未知" }}</p>
+    
+    {% if user.is_authenticated %}
+        <form action="{% url 'order_song' song.songid %}" method="post">
+            {% csrf_token %}
+            <button type="submit">点歌</button>
+        </form>
+    {% else %}
+        <p>请登录后点歌</p>
+    {% endif %}
+    
+    <a href="{% url 'search_songs' %}">返回搜索结果</a>
+</body>
+</html>
