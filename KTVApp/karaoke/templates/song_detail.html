@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ song.title }} - 詳細</title>
-</head>
+{% extends 'base.html' %}
+{% block title %}
+  楽曲詳細
+{% endblock %}
+{% block content %}
 <body>
     <h1>{{ song.title }}</h1>
     <p>アーティスト: {{ song.artist }}</p>
@@ -19,4 +19,4 @@
     
     <a href="{% url 'search_songs' %}">検索結果に戻る</a>
 </body>
-</html>
+{% endblock %}

@@ -11,6 +11,13 @@ from .forms import SongForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 
+def main(request):
+    # 获取当前正在播放的歌曲（这里假设是播放列表中状态为 'playing' 的第一首歌）
+    current_song = Playlist.objects.filter(status='playing').first()
+    if current_song:
+        current_song = current_song.songid  # 获取实际的 Song 对象
+
+    return render(request, 'main.html', {'current_song': current_song})
 def admin_required(user):
     return user.is_staff
 

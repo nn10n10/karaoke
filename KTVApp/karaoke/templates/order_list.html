@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="jp-JP">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>プレイリスト</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>プレイリスト</h1>
+
+    {% if playlists %}
+      <table>
+        <thead>
+          <tr>
+            <th>楽曲</th>
+            <th>アーティスト</th>
+            <th>アルバム</th>
+            <th>状態</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for playlist in playlists %}
+            <tr>
+              <td>{{ playlist.songid.title }}</td>
+              <td>{{ playlist.songid.artist }}</td>
+              <td>{{ playlist.songid.album|default:'未知' }}</td>
+              <td>
+                {% if playlist.status == 'pending' %}
+                  待ち
+                {% elif playlist.status == 'playing' %}
+                  再生中
+                {% elif playlist.status == 'played' %}
+                  再生済
+                {% else %}
+                  未知状态
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>
+        ここはまだ何もないので、 <a href="{% url 'search_songs' %}">楽曲検索</a>で注文しましょう！
+      </p>
+    {% endif %}
+
+    <p>
+      <a href="{% url 'search_songs' %}">検索に戻る</a>
+    </p>
+  </body>
+</html>
