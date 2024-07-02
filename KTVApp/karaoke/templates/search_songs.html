@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>搜索结果</title>
+    <title>検索結果</title>
 </head>
 <body>
-    <h1>搜索结果</h1>
+    <h1>検索結果</h1>
     {% include 'search_form.html' %}
 
     {% if messages %}
@@ -19,7 +19,7 @@
         <ul>
             {% for song in songs %}
             <li>{{ song.title }} - {{ song.artist }}
-                <a href="{% url 'song_detail' song.songid %}">详情</a>
+                <a href="{% url 'song_detail' song.songid %}">詳細</a>
             </li>
         {% endfor %}
         </ul>
@@ -28,23 +28,23 @@
             <div class="pagination">
                 <span class="step-links">
                     {% if songs.has_previous %}
-                        <a href="?q={{ query }}&page=1">&laquo; 首页</a>
-                        <a href="?q={{ query }}&page={{ songs.previous_page_number }}">上一页</a>
+                        <a href="?q={{ query }}&page=1">&laquo; トップへ</a>
+                        <a href="?q={{ query }}&page={{ songs.previous_page_number }}">前のページへ</a>
                     {% endif %}
 
                     <span class="current">
-                        第 {{ songs.number }} 页，共 {{ songs.paginator.num_pages }} 页
+                        第 {{ songs.number }} ページ，共 {{ songs.paginator.num_pages }} ページ
                     </span>
 
                     {% if songs.has_next %}
-                        <a href="?q={{ query }}&page={{ songs.next_page_number }}">下一页</a>
-                        <a href="?q={{ query }}&page={{ songs.paginator.num_pages }}">尾页 &raquo;</a>
+                        <a href="?q={{ query }}&page={{ songs.next_page_number }}">次のページへ</a>
+                        <a href="?q={{ query }}&page={{ songs.paginator.num_pages }}">最後のページへ &raquo;</a>
                     {% endif %}
                 </span>
             </div>
         {% endif %}
     {% else %}
-        <p>没有找到匹配的歌曲。</p>
+        <p>結果がありませんでした</p>
     {% endif %}
 </body>
 </html>

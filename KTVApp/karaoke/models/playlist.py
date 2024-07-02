@@ -1,5 +1,5 @@
 from django.db import models
-from .users import User
+from django.conf import settings
 from .song import Song
 
 class Playlist(models.Model):
@@ -9,7 +9,7 @@ class Playlist(models.Model):
         ('played', 'Played'),
     ]
     Playid = models.AutoField(primary_key=True)
-    userid = models.ForeignKey(User, on_delete=models.CASCADE)
+    userid = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     songid = models.ForeignKey(Song, on_delete=models.CASCADE)
     order_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=100,choices=STATUS_CHOICES,default='pending')

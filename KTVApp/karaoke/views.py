@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
-from .models.users import User
 from .models.song import Song
 from .models.playlist import Playlist
 from .models.history import History
@@ -18,7 +17,7 @@ def admin_required(user):
 def search_songs(request):
     query = request.GET.get('q', '').strip()
     page = request.GET.get('page', 1)
-    results_per_page = 20  # 每页显示的结果数
+    results_per_page = 20 
 
     if query:
         songs = Song.objects.filter(
@@ -27,7 +26,7 @@ def search_songs(request):
             Q(album__icontains=query)
         ).distinct().order_by('title')
     else:
-        songs = Song.objects.all().order_by('title')[:100]  # 显示按标题排序的前100首歌
+        songs = Song.objects.all().order_by('title')[:100]  
 
     paginator = Paginator(songs, results_per_page)
     try:
@@ -44,7 +43,7 @@ def search_songs(request):
     }
 
     if not songs and query:
-        messages.info(request, "没有找到匹配的歌曲。请尝试其他关键词。")
+        messages.info(request, "結果がありませんでした")
 
     return render(request, 'search_songs.html', context)
 
@@ -79,8 +78,7 @@ def song_list(request):
 def order_song(request, songid):
     if request.method == 'POST':
         song = get_object_or_404(Song, songid=songid)
-        user = get_object_or_404(User, id=request.user.id)  # 获取实际的 User 实例
-        Playlist.objects.create(userid=user, songid=song, status='pending')
+        Playlist.objects.create(userid=request.user, songid=song, status='pending')
         return redirect('song_detail', songid=songid)
     return redirect('song_list')
 

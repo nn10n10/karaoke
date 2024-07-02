@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>歌曲列表</title>
+    <title>楽曲リスト</title>
   </head>
   <body>
-    <h1>歌曲列表</h1>
-    <a href="{% url 'search_songs' %}">搜索歌曲</a>
+    <h1>楽曲リスト</h1>
+    <a href="{% url 'search_songs' %}">検索</a>
     <ul>
       {% for song in songs %}
         <li>
           {{ song.title }} - {{ song.artist }}
-          <a href="{% url 'order_song' song.id %}">点歌</a>
+          <a href="{% url 'order_song' song.id %}">オーダー</a>
         </li>
       {% endfor %}
     </ul>
