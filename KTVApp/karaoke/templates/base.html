@@ -77,7 +77,10 @@
           {% endif %}
           {% if user.is_authenticated %}
             <li>
-              <a href="{% url 'logout' %}">ログアウト</a>
+              <a onclick="confirmLogout()">ログアウト</a>
+              <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                {% csrf_token %}
+              </form>
             </li>
           {% else %}
             <li>
@@ -102,7 +105,15 @@
     </footer>
 
     {% block extra_js %}
-
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script>
+        function confirmLogout() {
+          if (confirm('Are you sure you want to logout?')) {
+            // If user confirms, submit the logout form
+            document.getElementById('logout-form').submit()
+          }
+        }
+      </script>
     {% endblock %}
   </body>
 </html>

@@ -10,6 +10,7 @@ from django.db.models import Q
 from .forms import SongForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
+from django.contrib.auth import logout
 
 def main(request):
     # 获取当前正在播放的歌曲（这里假设是播放列表中状态为 'playing' 的第一首歌）
@@ -72,7 +73,7 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            return redirect('song_list')
+            return redirect('main')
         else:
             return render(request, 'login.html', {'error': 'Invalid username or password'})
     return render(request, 'login.html')
@@ -109,3 +110,8 @@ def upload_song(request):
 def song_detail(request, songid):
     song = get_object_or_404(Song, songid=songid)
     return render(request, 'song_detail.html', {'song': song})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('main')
