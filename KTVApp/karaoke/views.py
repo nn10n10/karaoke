@@ -19,6 +19,7 @@ def main(request):
         current_song = current_song.songid  # 获取实际的 Song 对象
 
     return render(request, 'main.html', {'current_song': current_song})
+
 def admin_required(user):
     return user.is_staff
 
