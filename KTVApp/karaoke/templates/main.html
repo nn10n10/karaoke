@@ -1,18 +1,17 @@
 {% extends 'base.html' %}
-{% block title %}
-  メインページ - カラオケシステム
-{% endblock %}
+{% block title %}メインページ - カラオケシステム{% endblock %}
 {% block content %}
-  <main>
+<div role="main">
     <div id="video-container">
-      {% if current_song %}
-        <h2>再生中: {{ current_song.title }} - {{ current_song.artist }}</h2>
-        <video controls autoplay>
-          <source src="{{ current_song.file_path.url }}" type="video/mp4" />您的浏览器不支持 HTML5 视频。
-        </video>
-      {% else %}
-        <p>現在、再生中の楽曲はありません</p>
-      {% endif %}
+        {% if current_song %}
+            <h2>再生中: {{ current_song.title }} - {{ current_song.artist }}</h2>
+            <video id="karaoke-video" controls autoplay>
+                <source src="{{ current_song.file.url }}" type="video/mp4">
+                您的浏览器不支持 HTML5 视频。
+            </video>
+        {% else %}
+            <p>現在、再生中の楽曲はありません</p>
+        {% endif %}
     </div>
-  </main>
+</div>
 {% endblock %}

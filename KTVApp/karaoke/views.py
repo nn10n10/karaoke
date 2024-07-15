@@ -13,10 +13,17 @@ from django.contrib import messages
 from django.contrib.auth import logout
 
 def main(request):
-    # 获取当前正在播放的歌曲（这里假设是播放列表中状态为 'playing' 的第一首歌）
-    current_song = Playlist.objects.filter(status='playing').first()
-    if current_song:
-        current_song = current_song.songid  # 获取实际的 Song 对象
+    # Get the first song with 'playing' status from the Playlist
+    current_playlist_item = Playlist.objects.filter(status='playing').first()
+    current_song = current_playlist_item.songid if current_playlist_item else None
+
+    # If no song is playing, get the first pending song
+    if not current_song:
+        pending_playlist_item = Playlist.objects.filter(status='pending').first()
+        if pending_playlist_item:
+            pending_playlist_item.status = 'playing'
+            pending_playlist_item.save()
+            current_song = pending_playlist_item.songid
 
     return render(request, 'main.html', {'current_song': current_song})
 
@@ -88,6 +95,7 @@ def order_song(request, songid):
     if request.method == 'POST':
         song = get_object_or_404(Song, songid=songid)
         Playlist.objects.create(userid=request.user, songid=song, status='pending')
+        messages.success(request, f"{song.title} has been added to the playlist.")
         return redirect('song_detail', songid=songid)
     return redirect('song_list')
 
