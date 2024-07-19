@@ -70,6 +70,9 @@
           <li>
             <a href="{% url 'order_list' %}">プレイリスト</a>
           </li>
+          <li>
+            <a href="{% url 'view_history' %}">再生履歴</a>
+          </li>
           {% if user.is_authenticated and user.is_staff %}
             <li>
               <a href="{% url 'upload_song' %}">楽曲をアップロード</a>

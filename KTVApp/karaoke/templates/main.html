@@ -19,8 +19,21 @@
     document.addEventListener('DOMContentLoaded', function() {
         var video = document.getElementById('karaoke-video');
         if(video) {
-            video.play().catch(function(error) {
-                console.log("Auto-play was prevented: ", error);
+            video.addEventListener('ended', function() {
+                fetch('/song_ended/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({}),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        location.reload();
+                    }
+                });
             });
         }
     });

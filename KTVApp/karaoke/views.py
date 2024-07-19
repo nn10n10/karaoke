@@ -11,7 +11,13 @@ from .forms import SongForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.contrib.auth import logout
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.conf import settings
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils import timezone
 
+@ensure_csrf_cookie
 def main(request):
     # Get the first song with 'playing' status from the Playlist
     current_playlist_item = Playlist.objects.filter(status='playing').first()
@@ -24,8 +30,33 @@ def main(request):
             pending_playlist_item.status = 'playing'
             pending_playlist_item.save()
             current_song = pending_playlist_item.songid
+            
+    context = {
+        'current_song': current_song,
+        'MEDIA_URL': settings.MEDIA_URL,
+    }
 
-    return render(request, 'main.html', {'current_song': current_song})
+    return render(request, 'main.html', context)
+
+@require_POST
+def song_ended(request):
+    finished_song = Playlist.objects.filter(status='playing').first()
+    if finished_song:
+        # 添加到历史记录
+        History.objects.create(
+            user=finished_song.userid,
+            song=finished_song.songid,
+            order_time=timezone.now()
+        )
+        # 删除已播放的歌曲
+        finished_song.delete()
+
+    next_song = Playlist.objects.filter(status='pending').first()
+    if next_song:
+        next_song.status = 'playing'
+        next_song.save()
+    
+    return JsonResponse({'success': True})
 
 def admin_required(user):
     return user.is_staff
@@ -119,6 +150,14 @@ def upload_song(request):
 def song_detail(request, songid):
     song = get_object_or_404(Song, songid=songid)
     return render(request, 'song_detail.html', {'song': song})
+
+@login_required
+def view_history(request):
+    user_history = History.objects.filter(user=request.user).order_by('-order_time')
+    context = {
+        'history': user_history
+    }
+    return render(request, 'history.html', context)
 
 
 def logout_view(request):
