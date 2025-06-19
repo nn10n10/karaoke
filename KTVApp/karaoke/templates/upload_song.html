@@ -1,21 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Upload Song</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-  </head>
-  <body>
-    <div class="upload-container">
-      <h2>Upload Song</h2>
-      <form method="post" enctype="multipart/form-data">
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}楽曲アップロード{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">楽曲アップロード</h2>
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn">Upload</button>
-        <a href='../' type="submit">戻る</a>
-      </form>
-    </div>
-  </body>
-</html>
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {% if field.field.widget.input_type == 'file' %}
+                    <div class="custom-file">
+                        <input type="file"
+                               name="{{ field.name }}"
+                               id="{{ field.id_for_label }}"
+                               class="custom-file-input"
+                               {% if field.field.required %}required{% endif %}>
+                        <label class="custom-file-label" for="{{ field.id_for_label }}">ファイルを選択...</label>
+                    </div>
+                {% else %}
+                    <input type="{{ field.field.widget.input_type }}"
+                           name="{{ field.name }}"
+                           id="{{ field.id_for_label }}"
+                           class="form-control"
+                           {% if field.field.required %}required{% endif %}
+                           value="{{ field.value|default:'' }}">
+                {% endif %}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">アップロード</button>
+        <a href="{% url 'main' %}" class="btn btn-secondary ml-2">戻る</a> {# Assuming 'main' is the correct URL to go back to #}
+    </form>
+</div>
+
+{% block extra_js %}
+<script>
+// Script to make Bootstrap custom file input display the selected file name
+$('.custom-file-input').on('change', function(event) {
+    var inputFile = event.currentTarget;
+    $(inputFile).parent().find('.custom-file-label').html(inputFile.files[0].name);
+});
+</script>
+{% endblock %}

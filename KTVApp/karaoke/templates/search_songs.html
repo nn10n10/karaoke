@@ -3,47 +3,74 @@
   楽曲検索
 {% endblock %}
 {% block content %}
-<body>
+<div class="container mt-4">
     {% include 'search_form.html' %}
 
     {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
     {% endif %}
 
     {% if songs %}
-        <ul>
-            {% for song in songs %}
-            <li>{{ song.title }} - {{ song.artist }}
-                <a href="{% url 'song_detail' song.songid %}">詳細</a>
-            </li>
-        {% endfor %}
-        </ul>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>タイトル</th>
+                    <th>アーティスト</th>
+                    <th>アクション</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in songs %}
+                <tr>
+                    <td>{{ song.title }}</td>
+                    <td>{{ song.artist }}</td>
+                    <td>
+                        <a href="{% url 'song_detail' song.songid %}" class="btn btn-info btn-sm">詳細</a>
+                        {# Add other actions like "Add to playlist" here, styled with btn classes #}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
         {% if is_paginated %}
-            <div class="pagination">
-                <span class="step-links">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
                     {% if songs.has_previous %}
-                        <a href="?q={{ query }}&page=1">&laquo; トップへ</a>
-                        <a href="?q={{ query }}&page={{ songs.previous_page_number }}">前のページへ</a>
+                        <li class="page-item"><a class="page-link" href="?q={{ query }}&page=1">&laquo; トップへ</a></li>
+                        <li class="page-item"><a class="page-link" href="?q={{ query }}&page={{ songs.previous_page_number }}">前のページへ</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo; トップへ</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">前のページへ</a></li>
                     {% endif %}
 
-                    <span class="current">
-                        第 {{ songs.number }} ページ，共 {{ songs.paginator.num_pages }} ページ
-                    </span>
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="#">第 {{ songs.number }} ページ <span class="sr-only">(current)</span></a>
+                    </li>
+                     <li class="page-item disabled"><a class="page-link" href="#">共 {{ songs.paginator.num_pages }} ページ</a></li>
+
 
                     {% if songs.has_next %}
-                        <a href="?q={{ query }}&page={{ songs.next_page_number }}">次のページへ</a>
-                        <a href="?q={{ query }}&page={{ songs.paginator.num_pages }}">最後のページへ &raquo;</a>
+                        <li class="page-item"><a class="page-link" href="?q={{ query }}&page={{ songs.next_page_number }}">次のページへ</a></li>
+                        <li class="page-item"><a class="page-link" href="?q={{ query }}&page={{ songs.paginator.num_pages }}">最後のページへ &raquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">次のページへ</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">最後のページへ &raquo;</a></li>
                     {% endif %}
-                </span>
-            </div>
+                </ul>
+            </nav>
         {% endif %}
-    {% else %}
-        <p>結果がありませんでした</p>
+    {% elif query %}
+        <div class="alert alert-warning mt-3" role="alert">
+            「{{ query }}」に一致する結果がありませんでした。
+        </div>
     {% endif %}
-</body>
+</div>
 {% endblock %}

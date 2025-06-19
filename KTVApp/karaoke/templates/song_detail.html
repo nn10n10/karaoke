@@ -1,22 +1,36 @@
 {% extends 'base.html' %}
 {% block title %}
-  楽曲詳細
+  楽曲詳細 - {{ song.title }}
 {% endblock %}
 {% block content %}
-<body>
-    <h1>{{ song.title }}</h1>
-    <p>アーティスト: {{ song.artist }}</p>
-    <p>アルバム: {{ song.album|default:"未知" }}</p>
-    
-    {% if user.is_authenticated %}
-        <form action="{% url 'order_song' song.songid %}" method="post">
-            {% csrf_token %}
-            <button type="submit">予約する</button>
-        </form>
-    {% else %}
-        <p>ログインしてください</p>
-    {% endif %}
-    
-    <a href="{% url 'search_songs' %}">検索結果に戻る</a>
-</body>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title mb-0">{{ song.title }}</h1>
+        </div>
+        <div class="card-body">
+            <p class="card-text"><strong>アーティスト:</strong> {{ song.artist }}</p>
+            <p class="card-text"><strong>アルバム:</strong> {{ song.album|default:"-" }}</p>
+            <p class="card-text"><strong>ファイルパス:</strong> {{ song.file_path }}</p> {# Assuming you might want to show this, or other details #}
+            <p class="card-text"><strong>Song ID:</strong> {{ song.songid }}</p>
+
+
+            {% if user.is_authenticated %}
+                <form action="{% url 'order_song' song.songid %}" method="post" class="mt-3">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">予約する</button>
+                </form>
+            {% else %}
+                <div class="alert alert-warning mt-3" role="alert">
+                    曲を予約するには<a href="{% url 'login' %}" class="alert-link">ログイン</a>してください。
+                </div>
+            {% endif %}
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'search_songs' %}" class="btn btn-secondary">検索結果に戻る</a>
+            {# You might want a link to go back to the previous page if possible #}
+            {# <a href="javascript:history.back()" class="btn btn-outline-secondary ml-2">戻る</a> #}
+        </div>
+    </div>
+</div>
 {% endblock %}

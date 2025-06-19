@@ -1,14 +1,31 @@
 {% extends 'base.html' %}
 {% block title %}再生履歴 - カラオケシステム{% endblock %}
 {% block content %}
-<h1>再生履歴</h1>
-<ul>
-    {% for item in history %}
-    <li>
-        {{ item.song.title }} - {{ item.song.artist }} ({{ item.order_time|date:"Y-m-d H:i" }})
-    </li>
-    {% empty %}
-    <li>まだ履歴がありません。</li>
-    {% endfor %}
-</ul>
+<div class="container mt-4">
+    <h1 class="mb-4">再生履歴</h1>
+    {% if history %}
+        <table class="table table-sm table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th>タイトル</th>
+                    <th>アーティスト</th>
+                    <th>再生日時</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in history %}
+                <tr>
+                    <td>{{ item.song.title }}</td>
+                    <td>{{ item.song.artist }}</td>
+                    <td>{{ item.order_time|date:"Y-m-d H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            まだ再生履歴がありません。
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

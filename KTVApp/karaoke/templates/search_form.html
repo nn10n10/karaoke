@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>楽曲検索</title>
-</head>
-<body>
-    <h1>楽曲検索</h1>
-    <form method="GET" action="{% url 'search_songs' %}">
-        <input type="text" name="q" placeholder="曲名、アーティスト、アルバムで検索" value="{{ query }}">
-        <button type="submit">検索</button>
-    </form>
-</body>
-</html>
+<form method="GET" action="{% url 'search_songs' %}" class="form-inline mb-4">
+    <input type="text" name="q" class="form-control mr-sm-2 flex-grow-1" placeholder="曲名、アーティスト、アルバムで検索" value="{{ query }}">
+    <button type="submit" class="btn btn-primary">検索</button>
+</form>

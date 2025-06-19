@@ -1,18 +1,68 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>楽曲リスト</title>
-  </head>
-  <body>
-    <h1>楽曲リスト</h1>
-    <a href="{% url 'search_songs' %}">検索</a>
-    <ul>
-      {% for song in songs %}
-        <li>
-          {{ song.title }} - {{ song.artist }}
-          <a href="{% url 'order_song' song.id %}">オーダー</a>
-        </li>
-      {% endfor %}
-    </ul>
-  </body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}楽曲リスト{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>楽曲リスト</h1>
+        <a href="{% url 'search_songs' %}" class="btn btn-primary">楽曲検索へ</a>
+    </div>
+
+    {% if songs %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>タイトル</th>
+                    <th>アーティスト</th>
+                    <th>アクション</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in songs %}
+                <tr>
+                    <td>{{ song.title }}</td>
+                    <td>{{ song.artist }}</td>
+                    <td>
+                        <a href="{% url 'order_song' song.id %}" class="btn btn-success btn-sm">オーダー</a>
+                        {# You can add other actions like "Details" if needed #}
+                        {# <a href="{% url 'song_detail' song.songid %}" class="btn btn-info btn-sm">詳細</a> #}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if is_paginated %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; トップへ</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">前のページへ</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo; トップへ</a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">前のページへ</a></li>
+                {% endif %}
+
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">第 {{ page_obj.number }} ページ <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item disabled"><a class="page-link" href="#">共 {{ page_obj.paginator.num_pages }} ページ</a></li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">次のページへ</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">最後のページへ &raquo;</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">次のページへ</a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">最後のページへ &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            利用可能な楽曲はありません。
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
