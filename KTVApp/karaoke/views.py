@@ -112,6 +112,10 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
+            if request.POST.get('remember_me'):
+                request.session.set_expiry(settings.SESSION_COOKIE_AGE) # Persist session
+            else:
+                request.session.set_expiry(0) # Expire on browser close
             return redirect('main')
         else:
             return render(request, 'login.html', {'error': 'Invalid username or password'})

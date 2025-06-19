@@ -24,15 +24,51 @@
             </div>
             <div class="form-group">
               <label for="password">Password:</label>
-              <input type="password" id="password" name="password" class="form-control" required />
+              <div class="input-group">
+                <input type="password" id="password" name="password" class="form-control" required />
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="button" id="togglePassword">Show</button>
+                </div>
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="rememberMe" name="remember_me">
+              <label class="form-check-label" for="rememberMe">Remember me</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
           </form>
+          <a href="{% url 'main' %}" class="btn btn-secondary btn-block mt-3">Return to Homepage</a>
+
+          <div class="mt-4 text-center">
+            <p class="text-muted">Or sign in with:</p>
+            <a href="#" class="btn btn-outline-danger btn-block mb-2 disabled" aria-disabled="true" role="button">
+              Sign in with Google (Coming Soon)
+            </a>
+            <a href="#" class="btn btn-outline-primary btn-block disabled" aria-disabled="true" role="button">
+              Sign in with Facebook (Coming Soon)
+            </a>
+          </div>
         </div>
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password'); // Using existing id="password"
+
+        if (togglePassword && password) {
+          togglePassword.addEventListener('click', function() {
+            // Toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            // Toggle the button text
+            this.textContent = type === 'password' ? 'Show' : 'Hide';
+          });
+        }
+      });
+    </script>
   </body>
 </html>
